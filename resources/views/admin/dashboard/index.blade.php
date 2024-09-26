@@ -65,7 +65,7 @@
     <!-- ./col -->
 </div>
 <!-- /.row -->
-
+@include('plugins.amcharts_js')
 @include('admin.dashboard.line_chart')
 @include('admin.dashboard.pie_chart')
 

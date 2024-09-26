@@ -29,7 +29,7 @@ class DashboardController extends Controller
         });
 
         // Gabungkan data transaksi dengan semua bulan
-        $dataChart = $allMonths->map(function ($monthData) use ($transaksiPerBulan) {
+        $lineChart = $allMonths->map(function ($monthData) use ($transaksiPerBulan) {
             // Cari data transaksi untuk bulan yang bersangkutan
             $found = $transaksiPerBulan->firstWhere('month', $monthData['id']);
             
@@ -42,8 +42,8 @@ class DashboardController extends Controller
         });
 
         // TRANSAKSI PER PRODUK
-        $transaksiPerProduk = $m_dashboard->transaksiPerProduk();
-        // dd(json_encode($transaksiPerProduk));
+        $pieChart = $m_dashboard->transaksiPerProduk();
+        // dd(json_encode($pieChart));
 
         $data = [
             'title'                 => 'Halaman Dashboard',
@@ -51,8 +51,8 @@ class DashboardController extends Controller
             'transaksiSukses'       => $transaksiSukses,
             'transaksiGagal'        => $transaksiGagal,
             'transaksiMenunggu'     => $transaksiMenunggu,
-            'dataChart'             => json_encode($dataChart),
-            'transaksiPerProduk'    => json_encode($transaksiPerProduk)
+            'lineChart'             => json_encode($lineChart),
+            'pieChart'              => json_encode($pieChart)
         ];
         return view('admin.dashboard.index', $data);
     }
