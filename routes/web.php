@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // ADMIN
@@ -12,15 +13,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function() {
-    return "Hello Laravel!";
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/test_var', function() {
-    return view('test', ['message' => 'Hello Laravel from Variable']);
-});
-
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // DASHBOARD
     Route::get('/dashboard', [
         DashboardController::class, 'index'
@@ -95,3 +98,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         TransaksiController::class, 'export'
     ])->name('export_transaksi');
 });
+
+require __DIR__.'/auth.php';
