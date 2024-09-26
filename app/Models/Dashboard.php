@@ -48,4 +48,32 @@ class Dashboard extends Model
                     ->count();
         return $query;
     }
+
+    public function transaksiPerBulan()
+    {
+        $query = DB::table('transaksi')
+                    ->select(
+                        DB::raw('MONTH(tanggal_transaksi) as month'),
+                        DB::raw('COUNT(*) as total_transaksi')
+                    )
+                    ->groupBy(DB::raw('MONTH(tanggal_transaksi)'))
+                    ->get();
+        return $query;
+    }
+
+    public function transaksiPerProduk()
+    {
+        $totalTransaksi = DB::table('transaksi')->count();
+
+        $query = DB::table('transaksi')
+            ->select(
+                'nama_produk',
+                DB::raw('COUNT(*) as total_transaksi'),
+                DB::raw('ROUND((COUNT(*) / '. $totalTransaksi .') * 100, 2) as persen_transaksi')
+            )
+            ->groupBy('nama_produk')
+            ->get();
+
+        return $query;
+    }
 }
